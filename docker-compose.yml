@@ -8,10 +8,6 @@ services:
     volumes:
       - ./meeting_notetaker.db:/app/meeting_notetaker.db
       - ./audio_recordings:/app/audio_recordings
-    environment:
-      - SECRET_KEY=${SECRET_KEY:-change-me}
-      - LLM_ENDPOINT=${LLM_ENDPOINT:-http://localhost:11434/v1}
-      - LLM_MODEL=${LLM_MODEL:-llama3.2}
-      - LLM_API_KEY=${LLM_API_KEY:-not-needed}
-      - WHISPER_MODEL=${WHISPER_MODEL:-base}
+    env_file:
+      - .env
     restart: unless-stopped
