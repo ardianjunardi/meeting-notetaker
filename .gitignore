@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+__pycache__
+.env
+*.db
+audio_recordings/
+.vscode/
+.idea/
+*.egg-info/
+dist/
+build/

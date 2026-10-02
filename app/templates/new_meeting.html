@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}New Meeting - Meeting Notetaker{% endblock %}
+{% block content %}
+<h2>New Meeting</h2>
+<form action="/meetings" method="post">
+    <label>
+        Meeting Title
+        <input type="text" name="title" placeholder="e.g. Weekly Sprint Planning" required>
+    </label>
+    <label>
+        Google Meet Link
+        <input type="url" name="meet_link" placeholder="https://meet.google.com/xxx-yyyy-zzz" required pattern="https?://meet\.google\.com/.*">
+        <small>Paste the full Google Meet URL</small>
+    </label>
+    <fieldset>
+        <legend>Schedule (optional)</legend>
+        <label>
+            Date & Time
+            <input type="datetime-local" name="scheduled_at">
+        </label>
+    </fieldset>
+    <details>
+        <summary>How it works</summary>
+        <ol>
+            <li>Submit your meeting link</li>
+            <li>Our bot will join the meeting at the scheduled time (or immediately for instant meetings)</li>
+            <li>Bot captures audio, transcribes using Whisper, and generates minutes with your LLM</li>
+            <li>View the summary, action items, and pending questions when done</li>
+        </ol>
+    </details>
+    <button type="submit">Start Recording</button>
+    <a href="/dashboard" role="button" class="secondary outline">Cancel</a>
+</form>
+{% endblock %}

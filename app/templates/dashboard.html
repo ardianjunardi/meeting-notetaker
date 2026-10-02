@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Meeting Notetaker{% endblock %}
+{% block content %}
+<h2>My Meetings</h2>
+<p>
+    <a href="/meetings/new" role="button" class="primary">+ New Meeting</a>
+</p>
+
+{% if meetings %}
+<div class="dashboard-grid">
+    {% for meeting in meetings %}
+    <article class="meeting-card">
+        <h3>
+            <a href="/meetings/{{ meeting.id }}">{{ meeting.title }}</a>
+        </h3>
+        <p>
+            <span class="status-badge status-{{ meeting.status }}">{{ meeting.status }}</span>
+            {% if meeting.scheduled_at %}
+            &middot; {{ meeting.scheduled_at.strftime('%Y-%m-%d %H:%M') }}
+            {% endif %}
+        </p>
+        <p style="font-size:0.85em; color:var(--pico-muted-color);">
+            {{ meeting.meet_link[:60] }}{% if meeting.meet_link|length > 60 %}...{% endif %}
+        </p>
+        <small>Created: {{ meeting.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+    </article>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <h3>No meetings yet</h3>
+    <p>Create your first meeting to get started!</p>
+    <a href="/meetings/new" role="button">+ New Meeting</a>
+</div>
+{% endif %}
+{% endblock %}

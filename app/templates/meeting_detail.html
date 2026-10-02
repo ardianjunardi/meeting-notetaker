@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}{{ meeting.title }} - Meeting Notetaker{% endblock %}
+{% block content %}
+<p>
+    <a href="/dashboard">&larr; Back to Dashboard</a>
+</p>
+
+<h2>{{ meeting.title }}</h2>
+
+<div style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1.5rem;">
+    <span class="status-badge status-{{ meeting.status }}">{{ meeting.status }}</span>
+    {% if meeting.scheduled_at %}
+    <small>Scheduled: {{ meeting.scheduled_at.strftime('%Y-%m-%d %H:%M') }}</small>
+    {% endif %}
+    <small>Created: {{ meeting.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+</div>
+
+<p>
+    <strong>Meet Link:</strong> <a href="{{ meeting.meet_link }}" target="_blank">{{ meeting.meet_link }}</a>
+</p>
+
+{% if meeting.audio_path %}
+<p><strong>Audio:</strong> {{ meeting.audio_path }}</p>
+{% endif %}
+
+{% if meeting.status == "completed" and meeting.minutes %}
+<div class="minutes-section">
+    <h2>Meeting Minutes</h2>
+
+    <h3>Summary</h3>
+    <div style="white-space: pre-wrap;">{{ meeting.minutes.summary }}</div>
+
+    {% if meeting.minutes.action_items %}
+    <h3>Action Items</h3>
+    {% for item in meeting.minutes.action_items|safe|from_json %}
+    <div class="action-item">
+        <strong>{{ item.task }}</strong>
+        {% if item.assignee %}— {{ item.assignee }}{% endif %}
+        {% if item.deadline %} ({{ item.deadline }}){% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if meeting.minutes.pending_questions %}
+    <h3>Pending Questions</h3>
+    <ul>
+        {% for q in meeting.minutes.pending_questions|safe|from_json %}
+        <li>{{ q }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if meeting.minutes.raw_transcript %}
+    <details>
+        <summary>Raw Transcript</summary>
+        <pre style="max-height: 400px; overflow-y: auto; font-size:0.85rem;">{{ meeting.minutes.raw_transcript }}</pre>
+    </details>
+    {% endif %}
+
+    <small>Generated: {{ meeting.minutes.generated_at.strftime('%Y-%m-%d %H:%M') }}</small>
+</div>
+{% elif meeting.status in ("running", "transcribing", "summarizing") %}
+<div class="minutes-section" style="text-align:center;">
+    <article aria-busy="true" style="margin:0;"></article>
+    <p>Processing your meeting... This may take a few minutes.</p>
+    <small>Status: {{ meeting.status }}</small>
+    <script>
+        setTimeout(function() { location.reload(); }, 10000);
+    </script>
+</div>
+{% elif meeting.status == "failed" %}
+<div class="minutes-section" style="border-color:var(--pico-del-color);">
+    <h3 style="color:var(--pico-del-color);">Processing Failed</h3>
+    <p>The bot was unable to process this meeting. This could be due to:</p>
+    <ul>
+        <li>Invalid or expired meeting link</li>
+        <li>Meeting ended before bot could join</li>
+        <li>Audio capture failure</li>
+    </ul>
+    <a href="/meetings/new" role="button">Try Again</a>
+</div>
+{% else %}
+<div class="minutes-section" style="text-align:center;">
+    <p>Waiting for bot to start processing...</p>
+    <small>Status: {{ meeting.status }}</small>
+    <script>
+        setTimeout(function() { location.reload(); }, 10000);
+    </script>
+</div>
+{% endif %}
+{% endblock %}

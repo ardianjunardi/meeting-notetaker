@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Meeting Notetaker{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        main {
+            flex: 1;
+        }
+        header nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .auth-container {
+            max-width: 420px;
+            margin: 80px auto;
+        }
+        .dashboard-grid {
+            display: grid;
+            gap: 1rem;
+        }
+        .meeting-card {
+            border: 1px solid var(--pico-muted-border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            transition: box-shadow 0.2s;
+        }
+        .meeting-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 0.2em 0.6em;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-running { background: #dbeafe; color: #1e40af; }
+        .status-transcribing { background: #e0e7ff; color: #3730a3; }
+        .status-summarizing { background: #ede9fe; color: #5b21b6; }
+        .status-completed { background: #d1fae5; color: #065f46; }
+        .status-failed { background: #fee2e2; color: #991b1b; }
+        .minutes-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border: 1px solid var(--pico-muted-border-color);
+            border-radius: 8px;
+            background: var(--pico-card-background-color);
+        }
+        .minutes-section h3 {
+            margin-top: 1.5rem;
+            color: var(--primary);
+        }
+        .action-item {
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border-left: 3px solid var(--primary);
+            padding-left: 1rem;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--pico-muted-color);
+        }
+    </style>
+</head>
+<body>
+    <header class="container">
+        <nav>
+            <a href="/"><strong>🎙️ Meeting Notetaker</strong></a>
+            {% if user %}
+            <span>
+                {{ user.display_name }}
+                <a href="/auth/logout" role="button" class="secondary outline small">Logout</a>
+            </span>
+            {% endif %}
+        </nav>
+    </header>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="container" style="text-align:center; padding:2rem; color:var(--pico-muted-color);">
+        <small>Meeting Notetaker &copy; 2026</small>
+    </footer>
+</body>
+</html>

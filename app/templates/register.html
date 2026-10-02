@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Register - Meeting Notetaker{% endblock %}
+{% block content %}
+<div class="auth-container">
+    <h2>Register</h2>
+    <form action="/auth/register" method="post">
+        <label>
+            Display Name
+            <input type="text" name="display_name" placeholder="Your name" required autocomplete="name">
+        </label>
+        <label>
+            Email
+            <input type="email" name="email" placeholder="you@example.com" required autocomplete="email">
+        </label>
+        <label>
+            Password
+            <input type="password" name="password" placeholder="Min 8 characters" required minlength="8" autocomplete="new-password">
+        </label>
+        <button type="submit">Register</button>
+    </form>
+    <p style="text-align:center; margin-top:1rem;">
+        Already have an account? <a href="/login">Login here</a>
+    </p>
+</div>
+{% endblock %}
